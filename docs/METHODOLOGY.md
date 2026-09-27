@@ -59,12 +59,12 @@ The current source set is defined in `src/domain/sources.ts`.
 - The application has no analytics, accounts, database, or persistent document
   storage. Live AI analysis sends extracted text to the configured model
   provider through a Vercel server function without application logging.
-- Production model requests use Vercel AI Gateway and the deployment's
-  short-lived OIDC identity instead of a permanent browser-visible API key.
-- The hackathon deployment temporarily falls back to Pollinations AI when
-  Gateway billing is unavailable. Confirmed text may be sent to that provider;
-  source images are never sent. Sensitive real-world use requires a contracted
-  provider and reviewed retention terms.
+- Production model requests use Llama 3.3 70B through Groq. The credential is
+  stored as an encrypted Vercel secret and is never sent to the browser.
+- The hackathon deployment temporarily falls back to Pollinations AI if the
+  configured provider is unavailable. Confirmed text may be sent to the active
+  provider; source images are never sent. Sensitive real-world use requires a
+  contracted provider and reviewed retention terms.
 - Uploaded document text is parsed as data and is never executed as code.
 - PDF parsing is intentionally excluded after a dependency review identified an
   unsuitable parser release.

@@ -51,10 +51,10 @@ npm run dev
 
 Then open the local URL printed by Vite.
 
-The prepared sample includes a cached AI interpretation. Vercel deployments use
-AI Gateway with the deployment's short-lived OIDC token and Gemini Flash by
-default, so no permanent model key is required. For live local analysis, copy
-`.env.example` to `.env.local` and provide an AI Gateway key. Never expose the
+The prepared sample includes a cached AI interpretation. Production is
+configured for Llama 3.3 70B through Groq, with the credential stored only as an
+encrypted Vercel secret. The code can also use Vercel AI Gateway with OIDC. For
+live local analysis, copy `.env.example` to `.env.local`. Never expose a model
 key through a `VITE_` environment variable.
 
 If AI Gateway is unavailable, the hackathon deployment uses Pollinations' no-key

@@ -180,7 +180,7 @@ function Header({
         <a href="#how-it-works" onClick={() => setMobileMenuOpen(false)}>How it works</a>
         <a href="#evaluation" onClick={() => setMobileMenuOpen(false)}>Evidence</a>
         <a href="#sources" onClick={() => setMobileMenuOpen(false)}>Sources</a>
-        <button className="nav-cta" onClick={onStart}>Check an RTI response <ArrowRight size={15} /></button>
+        <button className="nav-cta" onClick={onStart}>Analyze with AI <ArrowRight size={15} /></button>
       </nav>
       <button
         className="menu-button"
@@ -200,15 +200,15 @@ function HomeScreen({ onStart, onSample }: { onStart: () => void; onSample: () =
       <section className="hero">
         <div className="hero-grain" aria-hidden="true" />
         <div className="hero-copy">
-          <div className="eyebrow"><span /> Built for India's RTI first-appeal process</div>
-          <h1>Your RTI response<br />shouldn't need a <em>law degree.</em></h1>
+          <div className="eyebrow"><span /> AI × ACCESS TO JUSTICE</div>
+          <h1>AI clarity for your<br /><em>RTI response.</em></h1>
           <p className="hero-lede">
-            Turn a confusing response into a clear, source-backed action plan. See what was said,
-            what may be missing, and when to act.
+            NyayaSetu combines on-device OCR, guarded LLM interpretation, and verified legal rules
+            to turn a rejection into an auditable first-appeal plan.
           </p>
           <div className="hero-actions">
             <button className="primary-button" onClick={onStart}>
-              Check my response <ArrowRight size={18} />
+              Analyze with AI <ArrowRight size={18} />
             </button>
             <button className="text-button" onClick={onSample}>
               <Sparkles size={17} /> Try a sample case
@@ -233,9 +233,9 @@ function HomeScreen({ onStart, onSample }: { onStart: () => void; onSample: () =
             <div className="doc-lines"><span /><span /><span /></div>
             <div className="doc-signature">Central Public Information Officer</div>
           </article>
-          <div className="analysis-tag tag-one"><CircleAlert size={16} /> Appeal details missing</div>
-          <div className="analysis-tag tag-two"><Clock3 size={16} /> Response: 7 days late</div>
-          <div className="analysis-tag tag-three"><ShieldCheck size={16} /> Source verified</div>
+          <div className="analysis-tag tag-one"><BrainCircuit size={16} /> AI issue spotting</div>
+          <div className="analysis-tag tag-two"><Clock3 size={16} /> Deadline: deterministic</div>
+          <div className="analysis-tag tag-three"><ShieldCheck size={16} /> Sources verified</div>
           <svg className="hero-scribble" viewBox="0 0 520 470" aria-hidden="true">
             <path d="M455 116C500 170 495 282 453 334" />
             <path d="M451 337l-15-20m15 20 22-12" />
@@ -244,21 +244,21 @@ function HomeScreen({ onStart, onSample }: { onStart: () => void; onSample: () =
       </section>
 
       <section className="trust-ribbon" id="trust">
-        <div><Fingerprint /><span><strong>Private by design</strong>Local OCR and no permanent storage</span></div>
-        <div><BookOpen /><span><strong>Official sources</strong>Rules link to government text</span></div>
-        <div><FileCheck2 /><span><strong>Auditable</strong>Every conclusion shows its work</span></div>
-        <div><Scale /><span><strong>Honest limits</strong>No outcome predictions</span></div>
+        <div><Fingerprint /><span><strong>On-device vision</strong>Images stay in your browser</span></div>
+        <div><BrainCircuit /><span><strong>Guarded LLM</strong>Explains, questions, discloses doubt</span></div>
+        <div><BookOpen /><span><strong>Verified law</strong>Rules use official sources</span></div>
+        <div><UserCheck /><span><strong>Human control</strong>You confirm facts before action</span></div>
       </section>
 
       <section className="problem-section section-wrap">
         <div className="section-kicker">THE GAP WE CLOSE</div>
         <div className="problem-grid">
           <div>
-            <h2>A rejection is not<br />the end of the road.</h2>
+            <h2>Legal AI should<br />explain itself.</h2>
           </div>
           <div className="problem-copy">
-            <p>RTI responses are often dense, incomplete, and time-sensitive. A missing appellate authority or unclear deadline can stop a citizen before the appeal even begins.</p>
-            <p>NyayaSetu separates facts from rules, calculates dates transparently, and turns the result into something you can act on.</p>
+            <p>RTI responses are dense, incomplete, and time-sensitive. A generic chatbot can make things worse by inventing rules or hiding uncertainty.</p>
+            <p>NyayaSetu gives AI one narrow job: understand the letter. Verified code handles legal rules and deadlines, while the citizen approves every extracted fact.</p>
           </div>
         </div>
         <div className="impact-strip">
@@ -272,24 +272,24 @@ function HomeScreen({ onStart, onSample }: { onStart: () => void; onSample: () =
         <div className="section-wrap">
           <div className="section-heading-row">
             <div>
-              <div className="section-kicker light">FROM LETTER TO NEXT STEP</div>
-              <h2>Clarity in three moves.</h2>
+              <div className="section-kicker light">A HYBRID AI SYSTEM</div>
+              <h2>Three layers. One safe workflow.</h2>
             </div>
-            <p>Legal AI should show its work. NyayaSetu combines document extraction with rules that judges and users can inspect.</p>
+            <p>Each layer does only what it is good at, and every high-stakes conclusion remains inspectable.</p>
           </div>
           <div className="process-grid">
-            <ProcessCard number="01" icon={<UploadCloud />} title="Bring your response" text="Photograph the letter, paste its text, or use a safe sample. On-device OCR reads images without uploading them." />
-            <ProcessCard number="02" icon={<FileSearch />} title="See what matters" text="Dates, exemptions, missing details, and appeal windows are surfaced with confidence labels." />
-            <ProcessCard number="03" icon={<ClipboardCheck />} title="Prepare your appeal" text="Generate a grounded first-appeal outline, evidence checklist, and an auditable calculation trail." />
+            <ProcessCard number="01" icon={<ScanText />} title="Vision reads" text="Tesseract's LSTM OCR extracts text from a photographed response on-device, without uploading the image." />
+            <ProcessCard number="02" icon={<BrainCircuit />} title="The LLM explains" text="Groq-hosted Llama interprets the letter, spots issues, proposes questions, and names its uncertainties." />
+            <ProcessCard number="03" icon={<ClipboardCheck />} title="Rules verify" text="Deterministic code calculates deadlines, checks procedure, and attaches official legal sources." />
           </div>
         </div>
       </section>
 
       <section className="ledger-section section-wrap">
         <div className="ledger-copy">
-          <div className="section-kicker">BUILT TO BE QUESTIONED</div>
-          <h2>Not a black box.<br />A reasoning ledger.</h2>
-          <p>Each recommendation is assembled from four visible layers. If an input is wrong, you can see exactly what needs correction.</p>
+          <div className="section-kicker">EXPLAINABLE BY DESIGN</div>
+          <h2>AI you can<br />actually audit.</h2>
+          <p>Every high-stakes recommendation is assembled from visible evidence. The model interprets language; it never controls the law or the clock.</p>
           <button className="secondary-button" onClick={onSample}>Open the sample analysis <ArrowRight size={17} /></button>
         </div>
         <div className="ledger-visual">
@@ -350,10 +350,10 @@ function HomeScreen({ onStart, onSample }: { onStart: () => void; onSample: () =
       <section className="final-cta section-wrap">
         <div className="cta-seal"><Scale /></div>
         <div>
-          <div className="section-kicker">YOUR RIGHT. YOUR NEXT STEP.</div>
-          <h2>Understand the response<br />before the clock runs out.</h2>
+          <div className="section-kicker">AI CLARITY. HUMAN CONTROL.</div>
+          <h2>Turn the letter into<br />an answer you can audit.</h2>
         </div>
-        <button className="primary-button" onClick={onStart}>Check my RTI response <ArrowRight size={18} /></button>
+        <button className="primary-button" onClick={onStart}>Analyze with AI <ArrowRight size={18} /></button>
       </section>
     </main>
   )
