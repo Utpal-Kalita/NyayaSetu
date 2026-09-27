@@ -117,7 +117,12 @@ export async function POST(request: Request) {
     }
 
     if (!modelResponse.ok) {
-      return Response.json({ error: 'AI provider request failed' }, { status: 502 })
+      const providerMessage = (await modelResponse.text()).slice(0, 500)
+      console.error('AI provider request failed', modelResponse.status, providerMessage)
+      return Response.json(
+        { error: 'AI provider request failed', providerStatus: modelResponse.status },
+        { status: 502 },
+      )
     }
 
     const payload = (await modelResponse.json()) as {
