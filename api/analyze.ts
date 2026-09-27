@@ -49,11 +49,7 @@ function validateAnalysis(value: unknown): ModelAnalysis | null {
   }
 }
 
-export default async function handler(request: Request) {
-  if (request.method !== 'POST') {
-    return Response.json({ error: 'Method not allowed' }, { status: 405 })
-  }
-
+export async function POST(request: Request) {
   const baseUrl = process.env.AI_API_BASE_URL ?? 'https://ai-gateway.vercel.sh/v1'
   const model = process.env.AI_MODEL ?? 'google/gemini-2.5-flash-lite'
   let apiKey = process.env.AI_API_KEY ?? process.env.VERCEL_OIDC_TOKEN
