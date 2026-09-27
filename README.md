@@ -51,10 +51,11 @@ npm run dev
 
 Then open the local URL printed by Vite.
 
-The prepared sample includes a cached AI interpretation. For live LLM analysis,
-copy `.env.example` to `.env.local` and provide an OpenAI-compatible endpoint,
-server-side API key, and model deployment name. Never expose the key through a
-`VITE_` environment variable.
+The prepared sample includes a cached AI interpretation. Vercel deployments use
+AI Gateway with the deployment's short-lived OIDC token and Gemini Flash by
+default, so no permanent model key is required. For live local analysis, copy
+`.env.example` to `.env.local` and provide an AI Gateway key. Never expose the
+key through a `VITE_` environment variable.
 
 ## Verification
 

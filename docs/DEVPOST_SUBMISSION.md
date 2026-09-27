@@ -49,7 +49,8 @@ outline, chronology, and evidence checklist.
 - React and TypeScript for the application
 - Vite for development and production bundling
 - Tesseract.js for lazy-loaded, on-device English OCR
-- A schema-constrained OpenAI-compatible LLM endpoint for plain-language interpretation
+- Gemini Flash through Vercel AI Gateway with short-lived OIDC authentication
+- Schema-constrained LLM output for plain-language interpretation
 - A deterministic TypeScript rule engine for legal deadlines
 - Local, heuristic extraction for pasted text and `.txt` files
 - Curated Central Information Commission and RTI Online sources

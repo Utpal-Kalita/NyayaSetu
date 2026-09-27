@@ -54,10 +54,10 @@ export default async function handler(request: Request) {
     return Response.json({ error: 'Method not allowed' }, { status: 405 })
   }
 
-  const baseUrl = process.env.AI_API_BASE_URL
-  const apiKey = process.env.AI_API_KEY
-  const model = process.env.AI_MODEL
-  if (!baseUrl || !apiKey || !model) {
+  const baseUrl = process.env.AI_API_BASE_URL ?? 'https://ai-gateway.vercel.sh/v1'
+  const apiKey = process.env.AI_API_KEY ?? process.env.VERCEL_OIDC_TOKEN
+  const model = process.env.AI_MODEL ?? 'google/gemini-2.5-flash-lite'
+  if (!apiKey) {
     return Response.json({ error: 'AI service is not configured' }, { status: 503 })
   }
 
@@ -79,7 +79,7 @@ export default async function handler(request: Request) {
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${apiKey}`,
-        'api-key': apiKey,
+        ...(process.env.AI_API_KEY ? { 'api-key': apiKey } : {}),
       },
       body: JSON.stringify({
         model,
