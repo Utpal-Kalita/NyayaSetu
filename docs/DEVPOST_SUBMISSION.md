@@ -11,9 +11,11 @@ Turn an RTI rejection into a source-backed first-appeal action plan.
 ## Short Summary
 
 NyayaSetu helps Indian citizens understand Central Government RTI responses. It
-extracts critical facts, calculates deadlines with transparent rules, detects
-missing appeal information, links every displayed legal rule to an official
-source, and creates an editable first-appeal packet.
+uses on-device OCR and a constrained LLM to extract meaning, explain the letter
+in plain language, disclose uncertainty, and suggest appeal questions. A
+separate deterministic engine calculates deadlines, detects missing appeal
+information, links every legal rule to an official source, and creates an
+editable first-appeal packet.
 
 ## Inspiration
 
@@ -47,13 +49,16 @@ outline, chronology, and evidence checklist.
 - React and TypeScript for the application
 - Vite for development and production bundling
 - Tesseract.js for lazy-loaded, on-device English OCR
+- A schema-constrained OpenAI-compatible LLM endpoint for plain-language interpretation
 - A deterministic TypeScript rule engine for legal deadlines
 - Local, heuristic extraction for pasted text and `.txt` files
 - Curated Central Information Commission and RTI Online sources
 - Browser print support for PDF packet export
 - Vitest for rules and parser verification
 
-No uploaded document is sent to a server in this prototype.
+Images are read on-device. For live AI interpretation, extracted text is sent
+to the configured server-side LLM endpoint and is not logged by the application.
+The prepared judging case uses a cached AI response for demo reliability.
 
 ## Responsible AI and Safety
 

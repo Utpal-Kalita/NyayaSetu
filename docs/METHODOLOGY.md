@@ -19,6 +19,9 @@ The application deliberately keeps four kinds of information separate:
    `src/domain/rtiRules.ts` and covered by unit tests.
 4. **Suggested actions:** editable language derived from the preceding layers,
    accompanied by limitations and review prompts.
+5. **Constrained AI interpretation:** a schema-validated plain-language summary,
+   issue list, questions, and explicit uncertainties. This layer cannot change
+   facts, rules, citations, or deadline calculations.
 
 This separation makes mistakes observable. A user can identify an incorrect
 date before relying on a resulting deadline.
@@ -53,8 +56,9 @@ The current source set is defined in `src/domain/sources.ts`.
 - Pasted text, plain-text files, and response photographs are processed in the browser.
 - Image OCR uses a lazy-loaded Tesseract.js worker and English recognition model.
 - First use downloads OCR runtime and language assets; the selected document is not sent to an application server.
-- The application has no analytics, accounts, database, model endpoint, or
-  document-upload server.
+- The application has no analytics, accounts, database, or persistent document
+  storage. Live AI analysis sends extracted text to the configured model
+  provider through a Vercel Edge function without application logging.
 - Uploaded document text is parsed as data and is never executed as code.
 - PDF parsing is intentionally excluded after a dependency review identified an
   unsuitable parser release.

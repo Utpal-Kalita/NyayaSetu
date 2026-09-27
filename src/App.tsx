@@ -3,6 +3,7 @@ import {
   ArrowLeft,
   ArrowRight,
   BookOpen,
+  BrainCircuit,
   CalendarDays,
   Check,
   CheckCircle2,
@@ -21,6 +22,7 @@ import {
   Languages,
   LockKeyhole,
   Menu,
+  MessageCircleQuestion,
   Quote,
   Scale,
   ScanText,
@@ -31,9 +33,10 @@ import {
   X,
 } from 'lucide-react'
 import { extractFileText } from './domain/extractFile'
+import { requestAiAnalysis } from './domain/aiAnalysis'
 import { parseRtiResponse } from './domain/parseDocument'
 import { analyzeRtiCase, formatDate } from './domain/rtiRules'
-import { sampleCase } from './domain/sampleCase'
+import { sampleAiAnalysis, sampleCase } from './domain/sampleCase'
 import { getSource, sources } from './domain/sources'
 import type { CaseAnalysis, RtiCaseInput } from './domain/types'
 
@@ -42,9 +45,9 @@ type ResultTab = 'overview' | 'evidence' | 'appeal'
 
 const analysisSteps = [
   'Reading document structure',
-  'Extracting dates and references',
+  'AI translating the response into plain language',
   'Applying verified RTI rules',
-  'Building your action plan',
+  'Cross-checking AI output against safeguards',
 ]
 
 function App() {
@@ -58,19 +61,30 @@ function App() {
   useEffect(() => {
     if (screen !== 'analyzing') return
 
+    let cancelled = false
+
     const stepTimer = window.setInterval(() => {
       setActiveStep((current) => Math.min(current + 1, analysisSteps.length - 1))
     }, 430)
-    const finishTimer = window.setTimeout(() => {
-      setAnalysis(analyzeRtiCase(pendingCase))
+
+    const aiPromise = pendingCase.registrationNumber === sampleCase.registrationNumber
+      ? Promise.resolve(sampleAiAnalysis)
+      : requestAiAnalysis(pendingCase)
+
+    void Promise.all([
+      aiPromise,
+      new Promise((resolve) => window.setTimeout(resolve, 1900)),
+    ]).then(([ai]) => {
+      if (cancelled) return
+      setAnalysis({ ...analyzeRtiCase(pendingCase), ai })
       setScreen('results')
       setActiveStep(0)
       window.scrollTo({ top: 0, behavior: 'smooth' })
-    }, 1900)
+    })
 
     return () => {
+      cancelled = true
       window.clearInterval(stepTimer)
-      window.clearTimeout(finishTimer)
     }
   }, [pendingCase, screen])
 
@@ -672,6 +686,8 @@ function Overview({
         </div>
       </section>
 
+      {analysis.ai && <AiInsightPanel analysis={analysis.ai} />}
+
       <section className="result-section">
         <div className="result-section-heading">
           <div><span className="result-index">01</span><div><h2>What we found</h2><p>Facts extracted directly from the response</p></div></div>
@@ -727,6 +743,42 @@ function Overview({
         <button className="light-button" onClick={onAppeal}>Review appeal packet <ArrowRight size={17} /></button>
       </section>
     </div>
+  )
+}
+
+function AiInsightPanel({ analysis }: { analysis: NonNullable<CaseAnalysis['ai']> }) {
+  const available = analysis.mode !== 'unavailable'
+
+  return (
+    <section className={`ai-insight-panel ${analysis.mode}`}>
+      <div className="ai-panel-heading">
+        <div className="ai-orb"><BrainCircuit /></div>
+        <div>
+          <div className="ai-label">
+            AI INTERPRETATION
+            <span>{analysis.mode === 'live' ? 'Live' : analysis.mode === 'cached' ? 'Prepared sample' : 'Fallback'}</span>
+          </div>
+          <h2>{available ? 'What the response means in plain language' : 'AI layer unavailable'}</h2>
+        </div>
+      </div>
+      <p className="ai-summary">{analysis.plainLanguageSummary}</p>
+      {available && (
+        <div className="ai-columns">
+          <div>
+            <h3><CircleAlert size={16} /> Issues the AI noticed</h3>
+            <ul>{analysis.keyIssues.map((issue) => <li key={issue}>{issue}</li>)}</ul>
+          </div>
+          <div>
+            <h3><MessageCircleQuestion size={16} /> Questions to raise</h3>
+            <ul>{analysis.questionsToRaise.map((question) => <li key={question}>{question}</li>)}</ul>
+          </div>
+        </div>
+      )}
+      {analysis.uncertainties.length > 0 && (
+        <div className="ai-uncertainty"><ShieldCheck size={16} /><span><strong>Uncertainty disclosed:</strong> {analysis.uncertainties.join(' ')}</span></div>
+      )}
+      <p className="ai-safety-note">{analysis.safetyNote}</p>
+    </section>
   )
 }
 

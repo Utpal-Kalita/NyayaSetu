@@ -1,4 +1,4 @@
-import type { RtiCaseInput } from './types'
+import type { AiAnalysis, RtiCaseInput } from './types'
 
 export const sampleCase: RtiCaseInput = {
   applicantName: 'Aarav Mehta',
@@ -21,4 +21,26 @@ This disposes of your RTI application.
 Date: 18 September 2026
 Central Public Information Officer
 Department of Personnel & Training`,
+}
+
+export const sampleAiAnalysis: AiAnalysis = {
+  mode: 'cached',
+  plainLanguageSummary:
+    'The department has refused the entire request because it considers the requested material personal information. The letter does not explain which individual records were examined, whether any non-personal portions could be released, or how to file a first appeal.',
+  keyIssues: [
+    'One exemption is applied to the whole request without a record-by-record explanation.',
+    'The response does not identify the First Appellate Authority or state the appeal period.',
+    'The letter does not discuss whether non-exempt portions could be separated and disclosed.',
+  ],
+  questionsToRaise: [
+    'Which specific records or fields were considered personal information?',
+    'Can non-exempt portions be disclosed after severing protected information under Section 10?',
+    'Who is the designated First Appellate Authority for this application?',
+  ],
+  uncertainties: [
+    'The original RTI application is not included, so the exact breadth of each request cannot be verified.',
+    'The AI cannot determine whether Section 8(1)(j) was lawfully applied from this letter alone.',
+  ],
+  safetyNote:
+    'Prepared AI interpretation for the sample case. Dates, legal rules, and citations are calculated separately by the deterministic engine.',
 }

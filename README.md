@@ -1,7 +1,7 @@
 # NyayaSetu
 
-NyayaSetu is an India-focused assistant for understanding RTI rejections and
-preparing first appeals. It is being developed for LexHack 2026.
+NyayaSetu is an AI-assisted, India-focused system for understanding RTI
+rejections and preparing first appeals. It is being developed for LexHack 2026.
 
 ## Product Direction
 
@@ -29,6 +29,8 @@ The first complete prototype is implemented. It includes:
 
 - A responsive public landing page and privacy-first upload flow
 - On-device OCR for JPG, PNG, and WebP photographs
+- Server-side LLM interpretation with schema-validated output and safe fallback
+- Plain-language summaries, issue spotting, uncertainty disclosure, and appeal questions
 - Local parsing for pasted response text and plain-text files
 - Human verification of extracted dates before rules run
 - An instant, prepared sample case for reliable judging
@@ -49,6 +51,11 @@ npm run dev
 
 Then open the local URL printed by Vite.
 
+The prepared sample includes a cached AI interpretation. For live LLM analysis,
+copy `.env.example` to `.env.local` and provide an OpenAI-compatible endpoint,
+server-side API key, and model deployment name. Never expose the key through a
+`VITE_` environment variable.
+
 ## Verification
 
 ```bash
@@ -65,6 +72,12 @@ an application server. Live PDF parsing is intentionally excluded after a
 dependency security review. Users can photograph a response, paste its text,
 upload a `.txt` export, or use the prepared sample. A production PDF workflow
 should use a patched, sandboxed parser with strict file limits.
+
+The LLM is restricted to interpreting supplied text and generating questions.
+It cannot select legal rules, calculate dates, create citations, or predict an
+appeal outcome. Uploaded text is wrapped as untrusted data, output must match a
+strict schema, and the application continues with deterministic checks if the
+AI service is unavailable.
 
 ## Documentation
 

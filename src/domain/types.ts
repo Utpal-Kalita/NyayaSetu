@@ -56,6 +56,15 @@ export interface ReasoningStep {
   sourceId?: string
 }
 
+export interface AiAnalysis {
+  mode: 'live' | 'cached' | 'unavailable'
+  plainLanguageSummary: string
+  keyIssues: string[]
+  questionsToRaise: string[]
+  uncertainties: string[]
+  safetyNote: string
+}
+
 export interface CaseAnalysis {
   input: RtiCaseInput
   status: 'action-recommended' | 'appeal-window-open' | 'review-needed'
@@ -71,4 +80,5 @@ export interface CaseAnalysis {
   reasoning: ReasoningStep[]
   appealGrounds: string[]
   evidenceChecklist: string[]
+  ai?: AiAnalysis
 }
