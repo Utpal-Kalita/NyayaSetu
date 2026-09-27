@@ -60,10 +60,6 @@ export async function POST(request: Request) {
       apiKey = undefined
     }
   }
-  if (!apiKey) {
-    return Response.json({ error: 'AI service is not configured' }, { status: 503 })
-  }
-
   let documentText = ''
   try {
     const body = (await request.json()) as { documentText?: unknown }
@@ -77,26 +73,48 @@ export async function POST(request: Request) {
   }
 
   try {
-    const modelResponse = await fetch(`${baseUrl.replace(/\/$/, '')}/chat/completions`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${apiKey}`,
-        ...(process.env.AI_API_KEY ? { 'api-key': apiKey } : {}),
+    const messages = [
+      { role: 'system', content: systemPrompt },
+      {
+        role: 'user',
+        content: `Analyze the RTI response between the data markers.\n\n<document_data>\n${documentText}\n</document_data>`,
       },
-      body: JSON.stringify({
-        model,
-        temperature: 0.1,
-        response_format: { type: 'json_object' },
-        messages: [
-          { role: 'system', content: systemPrompt },
-          {
-            role: 'user',
-            content: `Analyze the RTI response between the data markers.\n\n<document_data>\n${documentText}\n</document_data>`,
-          },
-        ],
-      }),
+    ]
+    const requestBody = (selectedModel: string) => JSON.stringify({
+      model: selectedModel,
+      temperature: 0.1,
+      response_format: { type: 'json_object' },
+      messages,
     })
+
+    let modelResponse: Response | undefined
+    if (apiKey) {
+      try {
+        modelResponse = await fetch(`${baseUrl.replace(/\/$/, '')}/chat/completions`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${apiKey}`,
+            ...(process.env.AI_API_KEY ? { 'api-key': apiKey } : {}),
+          },
+          body: requestBody(model),
+          signal: AbortSignal.timeout(20_000),
+        })
+      } catch {
+        modelResponse = undefined
+      }
+    }
+
+    // No-key fallback keeps the hackathon prototype usable when Gateway billing
+    // is unavailable. The client discloses that confirmed text reaches an AI provider.
+    if (!modelResponse?.ok) {
+      modelResponse = await fetch('https://text.pollinations.ai/openai', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: requestBody('openai-fast'),
+        signal: AbortSignal.timeout(25_000),
+      })
+    }
 
     if (!modelResponse.ok) {
       return Response.json({ error: 'AI provider request failed' }, { status: 502 })

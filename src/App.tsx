@@ -215,7 +215,7 @@ function HomeScreen({ onStart, onSample }: { onStart: () => void; onSample: () =
             </button>
           </div>
           <div className="privacy-note">
-            <LockKeyhole size={15} /> Documents are processed in your browser in this prototype.
+            <LockKeyhole size={15} /> Images stay local; confirmed text is sent only for AI interpretation.
           </div>
         </div>
         <div className="hero-art" aria-label="Example RTI response analysis">
@@ -244,7 +244,7 @@ function HomeScreen({ onStart, onSample }: { onStart: () => void; onSample: () =
       </section>
 
       <section className="trust-ribbon" id="trust">
-        <div><Fingerprint /><span><strong>Private by design</strong>Local-first document reading</span></div>
+        <div><Fingerprint /><span><strong>Private by design</strong>Local OCR and no permanent storage</span></div>
         <div><BookOpen /><span><strong>Official sources</strong>Rules link to government text</span></div>
         <div><FileCheck2 /><span><strong>Auditable</strong>Every conclusion shows its work</span></div>
         <div><Scale /><span><strong>Honest limits</strong>No outcome predictions</span></div>
@@ -430,7 +430,7 @@ function UploadScreen({
         <div className="upload-heading">
           <div className="eyebrow"><span /> PRIVATE, LOCAL ANALYSIS</div>
           <h1>Let's read the response<br /><em>together.</em></h1>
-          <p>Paste a Central Government RTI response or photograph it. On-device OCR keeps the document in this browser.</p>
+          <p>Paste a Central Government RTI response or photograph it. OCR stays on-device; confirmed text is sent for AI interpretation.</p>
         </div>
         <div
           className={dragging ? 'drop-zone is-dragging' : 'drop-zone'}
@@ -451,7 +451,7 @@ function UploadScreen({
           />
           <div className="upload-icon">{reading ? <ScanText size={30} /> : <UploadCloud size={30} />}</div>
           <h2>{reading ? 'Reading your document...' : file ? file.name : 'Drop your response here'}</h2>
-          <p>{reading ? 'The file remains in this browser.' : 'JPG, PNG, WebP, or TXT, up to 10 MB'}</p>
+          <p>{reading ? 'The image remains in this browser.' : 'JPG, PNG, WebP, or TXT, up to 10 MB'}</p>
           {reading && <div className="ocr-progress" aria-label={`OCR progress ${Math.round(ocrProgress * 100)} percent`}><span style={{ width: `${Math.max(5, ocrProgress * 100)}%` }} /></div>}
           <button className="primary-button" onClick={() => inputRef.current?.click()} disabled={reading}>
             {reading ? 'Processing' : 'Choose a file'}
@@ -482,7 +482,7 @@ function UploadScreen({
         </button>
         <div className="upload-assurances">
           <span><LockKeyhole /> No account required</span>
-          <span><ShieldCheck /> Local document reading</span>
+          <span><ShieldCheck /> Local image OCR</span>
           <span><Scale /> Not legal advice</span>
         </div>
       </div>
@@ -549,7 +549,7 @@ function ReviewScreen({
         </section>
 
         <div className="review-submit">
-          <div><ShieldCheck /><span><strong>Ready for rule-based analysis</strong>Your corrections remain local to this browser.</span></div>
+          <div><ShieldCheck /><span><strong>Ready for guarded AI analysis</strong>Confirmed text is sent to the model; images are not uploaded.</span></div>
           <button className="primary-button" onClick={onConfirm}>Confirm and analyze <ArrowRight size={18} /></button>
         </div>
       </div>
@@ -629,7 +629,7 @@ function ResultsScreen({
             <div><dt>Application</dt><dd>{formatDate(analysis.input.applicationDate)}</dd></div>
             <div><dt>Pages read</dt><dd>1</dd></div>
           </dl>
-          <div className="local-badge"><LockKeyhole size={15} /><span><strong>Processed locally</strong>Document text stays in this browser</span></div>
+          <div className="local-badge"><LockKeyhole size={15} /><span><strong>Privacy split</strong>Image OCR is local; confirmed text powers AI analysis</span></div>
           <button className="back-link sidebar-back" onClick={onBack}><ArrowLeft size={16} /> Analyze another response</button>
         </aside>
         <main className="results-main">

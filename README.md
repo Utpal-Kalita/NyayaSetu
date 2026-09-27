@@ -57,6 +57,11 @@ default, so no permanent model key is required. For live local analysis, copy
 `.env.example` to `.env.local` and provide an AI Gateway key. Never expose the
 key through a `VITE_` environment variable.
 
+If AI Gateway is unavailable, the hackathon deployment uses Pollinations' no-key
+OpenAI-compatible service as a temporary fallback. Only confirmed extracted text
+is sent; source images remain in the browser. Replace this fallback with a
+contracted provider before processing sensitive real-world documents.
+
 ## Verification
 
 ```bash

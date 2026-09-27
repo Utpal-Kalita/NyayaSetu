@@ -61,6 +61,10 @@ The current source set is defined in `src/domain/sources.ts`.
   provider through a Vercel server function without application logging.
 - Production model requests use Vercel AI Gateway and the deployment's
   short-lived OIDC identity instead of a permanent browser-visible API key.
+- The hackathon deployment temporarily falls back to Pollinations AI when
+  Gateway billing is unavailable. Confirmed text may be sent to that provider;
+  source images are never sent. Sensitive real-world use requires a contracted
+  provider and reviewed retention terms.
 - Uploaded document text is parsed as data and is never executed as code.
 - PDF parsing is intentionally excluded after a dependency review identified an
   unsuitable parser release.
