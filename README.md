@@ -1,46 +1,146 @@
 # NyayaSetu
 
-NyayaSetu is an AI-assisted, India-focused system for understanding RTI
-rejections and preparing first appeals. It is being developed for LexHack 2026.
+**Explainable AI that turns an Indian RTI rejection into a source-backed first-appeal plan.**
 
-## Product Direction
+Built for [LexHack 2026](https://nyayasetu-neon.vercel.app).
 
-The application will help a user upload an RTI response or rejection, extract
-the relevant facts, calculate appeal deadlines deterministically, explain the
-response in plain language, connect every legal rule to an official source, and
-generate an appeal-ready case packet.
+[Live application](https://nyayasetu-neon.vercel.app) | [Methodology](docs/METHODOLOGY.md) | [Devpost draft](docs/DEVPOST_SUBMISSION.md)
 
-The product is deliberately limited to the Indian Right to Information first
-appeal workflow. It is not a general-purpose AI lawyer and will not claim to
-provide definitive legal advice.
+## The Problem
 
-## Core Principles
+An RTI rejection may contain technical legal language, an unfamiliar exemption,
+missing appeal instructions, and a deadline that is already running. Generic
+legal chatbots can make the situation worse by mixing generated claims with
+legal rules and calculations.
 
-- Official sources beside every legal rule
-- Clear separation of extracted facts, deterministic checks, and AI-generated text
-- Transparent deadline calculations
-- Explicit uncertainty and human-review paths
-- Privacy-conscious document handling
-- A polished end-to-end workflow instead of a broad feature set
+NyayaSetu uses AI where language understanding helps and deterministic software
+where correctness must be inspectable.
 
-## Current Status
+## What It Does
 
-The first complete prototype is implemented. It includes:
+A user can photograph an RTI response, paste its text, upload a plain-text file,
+or open a safe prepared case. NyayaSetu then:
 
-- A responsive public landing page and privacy-first upload flow
-- On-device OCR for JPG, PNG, and WebP photographs
-- Server-side LLM interpretation with schema-validated output and safe fallback
-- Plain-language summaries, issue spotting, uncertainty disclosure, and appeal questions
-- Local parsing for pasted response text and plain-text files
-- Human verification of extracted dates before rules run
-- An instant, prepared sample case for reliable judging
-- Deterministic response and first-appeal deadline calculations
-- Required-field and procedural checks under Sections 7 and 19
-- A Section 10 severability prompt for non-exempt portions of records
-- An auditable fact-to-rule-to-calculation reasoning ledger
-- Curated official sources with source dates and limitations
-- An editable first-appeal packet with print-to-PDF support
-- Thirteen automated checks covering rules, parsing, scenarios, and source integrity
+- Reads photographs locally with Tesseract LSTM OCR
+- Requires the user to confirm extracted facts and dates
+- Uses Llama 3.3 70B through Groq to explain the response in plain language
+- Identifies document-level issues and useful appeal questions
+- Explicitly discloses uncertainty and missing context
+- Calculates response and first-appeal dates with deterministic TypeScript
+- Checks procedural requirements under Sections 7, 10, and 19 of the RTI Act
+- Links every displayed legal rule to a curated official source
+- Generates an editable first-appeal draft and evidence checklist
+- Produces an auditable fact-to-rule-to-calculation reasoning ledger
+
+## Live Demo
+
+Open **[nyayasetu-neon.vercel.app](https://nyayasetu-neon.vercel.app)**.
+
+For the fastest walkthrough, select **Try a sample case**. To demonstrate live
+AI, select **Analyze with AI**, paste an RTI response, verify the extracted
+fields, and confirm the analysis.
+
+The prepared case uses a clearly labeled cached AI interpretation for demo
+reliability. User-provided text uses the live production endpoint.
+
+## Architecture
+
+```text
+Photograph or response text
+        |
+        v
+On-device Tesseract OCR
+        |
+        v
+Human verification checkpoint
+        |
+        +-------------------------------+
+        |                               |
+        v                               v
+Guarded Llama 3.3 LLM            Deterministic RTI engine
+        |                               |
+Plain-language explanation        Deadline calculations
+Issue and question generation     Procedural checks
+Uncertainty disclosure            Official legal sources
+        |                               |
+        +---------------+---------------+
+                        |
+                        v
+              First-appeal packet
+```
+
+## Why This Is Not A Legal Chatbot
+
+The LLM is an interpretation layer, not the legal authority. It cannot:
+
+- Calculate or modify deadlines
+- Select or invent legal rules
+- Create unsupported citations
+- Decide whether an exemption was lawfully applied
+- Predict whether an appeal will succeed
+- Replace a lawyer or RTI practitioner
+
+Every high-stakes conclusion is separated into four visible stages:
+
+```text
+document fact -> official rule -> deterministic calculation -> suggested action
+```
+
+If the AI service fails, the sourced rules and deadline calculations continue to
+work.
+
+## AI Stack
+
+- **Document vision:** Tesseract.js LSTM OCR, loaded on demand in the browser
+- **Language model:** Llama 3.3 70B Versatile through Groq
+- **Model contract:** Strict JSON containing a summary, issues, questions,
+  uncertainties, and a safety note
+- **Provider fallback:** Pollinations' OpenAI-compatible endpoint for prototype
+  resilience
+- **Deployment identity:** Vercel OIDC support for AI Gateway integrations
+- **Prompt-injection boundary:** Uploaded text is delimited and treated only as
+  untrusted document data
+
+## Legal Rules
+
+The current prototype focuses on the Indian Central Government RTI first-appeal
+workflow and implements a deliberately small rule set:
+
+| Rule | Purpose |
+| --- | --- |
+| Section 7(1) | Standard response-period check |
+| Section 7(6) | Delayed-response fee note |
+| Section 7(8) | Required rejection communication details |
+| Section 10(1) | Severability of non-exempt information |
+| Section 19(1) | First-appeal target calculation |
+| RTI Online Guidelines | Registration reference and first-appeal fee guidance |
+
+Sources are curated in [`src/domain/sources.ts`](src/domain/sources.ts) and link
+to the Central Information Commission or the official RTI Online portal.
+
+## Privacy
+
+- Source images are processed locally and are not uploaded.
+- The user verifies extracted information before analysis.
+- Confirmed text is sent to the configured model provider.
+- The application does not intentionally persist documents.
+- There are no user accounts, analytics, or document databases.
+- Model credentials remain in encrypted server-side environment variables.
+
+Do not process sensitive real-world documents until provider retention terms
+and production data controls have been formally reviewed.
+
+## Technology
+
+- React 19
+- TypeScript
+- Vite
+- Tesseract.js
+- Groq API
+- Llama 3.3 70B Versatile
+- Vercel Functions
+- Vercel AI Gateway integration
+- Vitest
 
 ## Run Locally
 
@@ -49,43 +149,53 @@ npm install
 npm run dev
 ```
 
-Then open the local URL printed by Vite.
+The prepared sample works without credentials. For live local AI, copy the
+example environment file and provide an OpenAI-compatible server-side key:
 
-The prepared sample includes a cached AI interpretation. Production is
-configured for Llama 3.3 70B through Groq, with the credential stored only as an
-encrypted Vercel secret. The code can also use Vercel AI Gateway with OIDC. For
-live local analysis, copy `.env.example` to `.env.local`. Never expose a model
-key through a `VITE_` environment variable.
+```bash
+cp .env.example .env.local
+```
 
-If AI Gateway is unavailable, the hackathon deployment uses Pollinations' no-key
-OpenAI-compatible service as a temporary fallback. Only confirmed extracted text
-is sent; source images remain in the browser. Replace this fallback with a
-contracted provider before processing sensitive real-world documents.
+Never expose a model credential through a `VITE_` environment variable.
 
 ## Verification
 
 ```bash
 npm test
 npm run build
-npm audit --omit=dev
+npm audit
 ```
 
-## Prototype Boundary
+The repository currently contains 13 automated checks covering:
 
-Image OCR runs on-device with Tesseract.js. On first use, the browser downloads
-the OCR worker and English language model, but the selected image is not sent to
-an application server. Live PDF parsing is intentionally excluded after a
-dependency security review. Users can photograph a response, paste its text,
-upload a `.txt` export, or use the prepared sample. A production PDF workflow
-should use a patched, sandboxed parser with strict file limits.
+- Calendar arithmetic and leap-year boundaries
+- Response-delay and first-appeal calculations
+- Expired appeal windows
+- Missing rejection details
+- Written and numeric Indian date extraction
+- Prepared-case behavior
+- Official-source domain and metadata integrity
 
-The LLM is restricted to interpreting supplied text and generating questions.
-It cannot select legal rules, calculate dates, create citations, or predict an
-appeal outcome. Uploaded text is wrapped as untrusted data, output must match a
-strict schema, and the application continues with deterministic checks if the
-AI service is unavailable.
+No unsupported OCR, model, or legal-accuracy percentage is claimed.
 
-## Documentation
+## Limitations
 
-- [`docs/METHODOLOGY.md`](docs/METHODOLOGY.md): rules, safety model, and limitations
-- [`docs/DEVPOST_SUBMISSION.md`](docs/DEVPOST_SUBMISSION.md): submission copy and demo script
+- The initial scope covers Central Government first appeals, not every RTI jurisdiction.
+- OCR currently recognizes English JPG, PNG, and WebP images.
+- PDF processing is intentionally excluded from this prototype.
+- The system does not identify the correct appellate authority automatically.
+- Exemption validity and public-interest tests require qualified human review.
+- NyayaSetu provides civic information, not legal advice.
+
+## Roadmap
+
+- Review with RTI practitioners and legal-aid organizations
+- Hindi and regional-language OCR and explanations
+- Verified First Appellate Authority lookup
+- Sandboxed PDF processing
+- A larger anonymized evaluation dataset
+- Additional administrative appeal workflows after expert review
+
+## License
+
+Released under the [MIT License](LICENSE).
