@@ -58,7 +58,7 @@ The current source set is defined in `src/domain/sources.ts`.
 - First use downloads OCR runtime and language assets; the selected document is not sent to an application server.
 - The application has no analytics, accounts, database, or persistent document
   storage. Live AI analysis sends extracted text to the configured model
-provider through a Vercel Edge function without application logging.
+  provider through a Vercel server function without application logging.
 - Production model requests use Vercel AI Gateway and the deployment's
   short-lived OIDC identity instead of a permanent browser-visible API key.
 - Uploaded document text is parsed as data and is never executed as code.

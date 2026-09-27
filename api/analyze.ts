@@ -1,4 +1,4 @@
-export const config = { runtime: 'edge' }
+import { getVercelOidcToken } from '@vercel/oidc'
 
 declare const process: { env: Record<string, string | undefined> }
 
@@ -55,8 +55,15 @@ export default async function handler(request: Request) {
   }
 
   const baseUrl = process.env.AI_API_BASE_URL ?? 'https://ai-gateway.vercel.sh/v1'
-  const apiKey = process.env.AI_API_KEY ?? process.env.VERCEL_OIDC_TOKEN
   const model = process.env.AI_MODEL ?? 'google/gemini-2.5-flash-lite'
+  let apiKey = process.env.AI_API_KEY ?? process.env.VERCEL_OIDC_TOKEN
+  if (!apiKey) {
+    try {
+      apiKey = await getVercelOidcToken()
+    } catch {
+      apiKey = undefined
+    }
+  }
   if (!apiKey) {
     return Response.json({ error: 'AI service is not configured' }, { status: 503 })
   }
